@@ -3,14 +3,20 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useSession, signOut } from "../../lib/auth-client";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  // Mock authentication state (replace with actual BetterAuth session later)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // BetterAuth session hook
+  const { data: session, isPending } = useSession();
+  const isLoggedIn = !!session?.user;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 40);
@@ -18,7 +24,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent scrolling when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -29,11 +34,26 @@ export default function Navbar() {
 
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
     setMobileMenuOpen(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Logged out successfully.");
+            setDropdownOpen(false);
+            setMobileMenuOpen(false);
+            router.push("/login");
+            router.refresh();
+          },
+        },
+      });
+    } catch (error) {
+      toast.error("Failed to logout.");
+    }
   };
 
   const leftLinks = [
@@ -68,7 +88,6 @@ export default function Navbar() {
           isScrolled ? "max-w-full" : "max-w-5xl"
         }`}>
           
-          {/* --- MAIN NAVIGATION BAR (Slimmer Padding) --- */}
           <div className={`
             flex items-center justify-between transition-all duration-500 ease-in-out
             bg-[#2D312E] shadow-xl relative
@@ -163,8 +182,10 @@ export default function Navbar() {
                 ))}
               </div>
               
-              {/* Auth Buttons / Profile Dropdown (Slimmer padding) */}
-              {!isLoggedIn ? (
+              {/* Auth Buttons / Profile Dropdown */}
+              {isPending ? (
+                <div className="w-6 h-6 rounded-full border-2 border-white/20 border-t-white animate-spin" />
+              ) : !isLoggedIn ? (
                 <div className="flex items-center gap-2.5">
                   <Link
                     href="/login"
@@ -172,45 +193,51 @@ export default function Navbar() {
                   >
                     Login
                   </Link>
-                  <button
-                    onClick={() => setIsLoggedIn(true)} // Toggle for preview testing
-                    className="text-[10px] font-bold uppercase tracking-widest font-serif px-4 py-1.5 rounded-full bg-[#3A506B] hover:bg-[#2C3E50] text-white transition-all shadow-md"
+                  <Link
+                    href="/register"
+                    className="text-[10px] font-bold uppercase tracking-widest font-serif px-4 py-1.5 rounded-full bg-[#3A506B] hover:bg-[#2C3E50] text-white transition-all shadow-md text-center"
                   >
                     Register
-                  </button>
+                  </Link>
                 </div>
               ) : (
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 focus:outline-none"
+                    className="flex items-center gap-2 focus:outline-none group"
                   >
-                    <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-[#3A506B] shadow-sm relative bg-[#FBF9F4] flex items-center justify-center">
-                      <svg className="w-4 h-4 text-[#2D312E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
+                    <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#3A506B] shadow-md relative bg-[#FBF9F4] flex items-center justify-center">
+                      {session.user.image ? (
+                        <Image 
+                          src={session.user.image} 
+                          alt={session.user.name || "User"} 
+                          fill 
+                          className="object-cover" 
+                        />
+                      ) : (
+                        <span className="text-xs font-bold text-[#2D312E]">
+                          {session.user.name?.charAt(0).toUpperCase() || "U"}
+                        </span>
+                      )}
                     </div>
                   </button>
 
                   {/* Dropdown Menu */}
                   {dropdownOpen && (
-                    <div className="absolute right-0 mt-2.5 w-44 bg-[#FBF9F4] text-[#2D312E] border border-[#2D312E]/20 rounded-xl shadow-2xl py-2 z-50 text-[11px] font-serif uppercase tracking-wider">
-                      <div className="px-3.5 py-2 border-b border-gray-200 text-gray-500 font-semibold truncate">
-                        Naira Mehjabin
+                    <div className="absolute right-0 mt-2.5 w-48 bg-[#FBF9F4] text-[#2D312E] border border-[#2D312E]/20 rounded-2xl shadow-2xl py-2 z-50 text-[11px] font-serif uppercase tracking-wider">
+                      <div className="px-4 py-2.5 border-b border-gray-200 text-gray-500 font-semibold truncate">
+                        {session.user.name}
                       </div>
                       <Link
                         href="/my-profile"
                         onClick={() => setDropdownOpen(false)}
-                        className="block px-3.5 py-2 hover:bg-[#E5E0D0] transition-colors"
+                        className="block px-4 py-2.5 hover:bg-[#EAE5D9] transition-colors font-bold text-[#1C242B]"
                       >
                         My Profile
                       </Link>
                       <button
-                        onClick={() => {
-                          setIsLoggedIn(false);
-                          setDropdownOpen(false);
-                        }}
-                        className="w-full text-left px-3.5 py-2 text-red-600 hover:bg-[#E5E0D0] transition-colors font-bold"
+                        onClick={handleLogout}
+                        className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-[#EAE5D9] transition-colors font-bold"
                       >
                         Logout
                       </button>
@@ -221,7 +248,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* CENTRAL LOGO (Floating Crest - Slimmer sizing) */}
+          {/* CENTRAL LOGO (Floating Crest) */}
           <AnimatePresence>
             {!isScrolled && (
               <motion.div 
@@ -251,16 +278,13 @@ export default function Navbar() {
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-[200] bg-[#2D312E] flex flex-col p-6"
           >
-            {/* Close Button Header */}
             <div className="flex justify-between items-center mb-8">
               <span className="text-white font-['var(--font-handwritten)'] text-xl font-bold">
                 Book<span className="text-[#3A506B]">Nook</span>
               </span>
-
               <button 
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white focus:outline-none"
-                aria-label="Close menu"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -268,7 +292,6 @@ export default function Navbar() {
               </button>
             </div>
 
-            {/* Mobile Links */}
             <div className="flex flex-col gap-5">
               {mobileLinks.map((link, idx) => (
                 <motion.div
@@ -283,17 +306,13 @@ export default function Navbar() {
                     className="group flex items-center justify-between text-2xl font-serif font-bold uppercase text-[#F3EFE6] hover:text-[#3A506B] transition-colors"
                   >
                     {link.name}
-                    <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                    </svg>
                   </Link>
                 </motion.div>
               ))}
             </div>
 
-            {/* Footer info in Menu */}
             <div className="mt-auto pt-6 border-t border-white/10">
-              <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3 font-serif">A Small Online Library Archive</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3 font-serif">Library Archive</p>
               {!isLoggedIn ? (
                 <div className="flex gap-3">
                   <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="flex-1 py-3 bg-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-center text-xs">
@@ -304,7 +323,7 @@ export default function Navbar() {
                   </Link>
                 </div>
               ) : (
-                <button onClick={() => { setIsLoggedIn(false); setMobileMenuOpen(false); }} className="w-full py-3 bg-red-600/20 text-red-400 rounded-xl font-bold uppercase tracking-widest text-center text-xs">
+                <button onClick={handleLogout} className="w-full py-3 bg-red-600/20 text-red-400 rounded-xl font-bold uppercase tracking-widest text-center text-xs">
                   Logout
                 </button>
               )}
