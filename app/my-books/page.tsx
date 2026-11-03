@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -16,21 +16,25 @@ import {
   Plus,
   BookPlus,
   ArrowUpRight,
-  ArrowLeft
+  ArrowLeft,
+  AlertTriangle
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 export default function MyBooksPage() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const user = session?.user;
 
-  // Immediate title update to prevent stalling
-  if (typeof window !== "undefined") {
+  // Instant title setting on initial client render before layout paint
+  useIsomorphicLayoutEffect(() => {
     document.title = "BookNook | My Catalogued Volumes";
-  }
+  }, []);
 
   const [myBooks, setMyBooks] = useState<any[]>([]);
   const [loadingBooks, setLoadingBooks] = useState(true);
@@ -48,8 +52,11 @@ export default function MyBooksPage() {
   });
   const [updating, setUpdating] = useState(false);
 
+  // Delete Confirmation Modal State
+  const [bookToDelete, setBookToDelete] = useState<any | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
   useEffect(() => {
-    document.title = "BookNook | My Catalogued Volumes";
     const fetchMyBooks = async () => {
       if (!user?.email) return;
       try {
@@ -116,7 +123,7 @@ export default function MyBooksPage() {
       setMyBooks((prev) =>
         prev.map((b) => (b._id === editingBook._id ? result.data : b))
       );
-      toast.success("Volume updated gracefully.", { id: toastId });
+      toast.success("Volume updated gracefully ✨", { id: toastId });
       setEditingBook(null);
     } catch (err: any) {
       toast.error(err.message || "Error updating book.", { id: toastId });
@@ -125,24 +132,28 @@ export default function MyBooksPage() {
     }
   };
 
-  const handleDelete = async (bookId: string) => {
-    if (!window.confirm("Are you sure you want to remove this volume from the archive?")) return;
+  const confirmDelete = async () => {
+    if (!bookToDelete) return;
 
+    setDeleting(true);
     const toastId = toast.loading("De-cataloging volume...", {
       style: { background: "#2D312E", color: "#F3EFE6", borderRadius: "0.75rem" },
     });
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/books/${bookId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/books/${bookToDelete._id}`, {
         method: "DELETE",
       });
 
       if (!res.ok) throw new Error("Failed to delete book.");
 
-      setMyBooks((prev) => prev.filter((b) => b._id !== bookId));
-      toast.success("Volume removed from collection.", { id: toastId });
+      setMyBooks((prev) => prev.filter((b) => b._id !== bookToDelete._id));
+      toast.success("Volume removed from collection successfully.", { id: toastId });
+      setBookToDelete(null);
     } catch (err: any) {
       toast.error(err.message || "Error deleting book.", { id: toastId });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -335,7 +346,7 @@ export default function MyBooksPage() {
                       <Edit3 size={13} /> Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(book._id)}
+                      onClick={() => setBookToDelete(book)}
                       className="bg-[#8B3A3A]/10 hover:bg-[#8B3A3A] text-[#8B3A3A] hover:text-[#F3EFE6] border border-[#8B3A3A]/30 py-2.5 rounded-xl flex items-center justify-center gap-1.5 transition-all text-xs uppercase tracking-[0.1em] font-semibold cursor-pointer"
                     >
                       <Trash2 size={13} /> Delete
@@ -469,6 +480,52 @@ export default function MyBooksPage() {
                   {updating ? "Saving Changes..." : "Save Volume Entry"}
                 </button>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* CUSTOM DELETE CONFIRMATION MODAL */}
+      <AnimatePresence>
+        {bookToDelete && (
+          <div className="fixed inset-0 z-50 bg-[#1C242B]/40 backdrop-blur-xs flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-[#FBF9F4] w-full max-w-md rounded-2xl border border-[#2D312E]/20 shadow-2xl p-8 text-center relative font-serif space-y-4"
+            >
+              <div className="w-14 h-14 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto border border-red-200">
+                <AlertTriangle size={24} />
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-2xl font-bold text-[#1C242B]">
+                  Remove Volume?
+                </h3>
+                <p className="text-xs text-[#6B7280] font-sans leading-relaxed">
+                  Are you sure you want to remove <span className="font-bold text-[#1C242B]">"{bookToDelete.title}"</span> from the shared archive? This action cannot be undone.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-4 font-sans">
+                <button
+                  type="button"
+                  onClick={() => setBookToDelete(null)}
+                  disabled={deleting}
+                  className="w-full py-3 rounded-xl bg-[#EFECE6] hover:bg-[#E2DDD5] text-[#1C242B] text-xs font-bold uppercase tracking-wider transition-all border border-[#2D312E]/15 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  disabled={deleting}
+                  className="w-full py-3 rounded-xl bg-red-700 hover:bg-red-800 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                >
+                  {deleting ? "Removing..." : "Yes, Remove"}
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
