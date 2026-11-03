@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 BookNook — A Small Online Library & Literary Archive
 
-## Getting Started
+> *“Sanctuary for lost pages, timeless stories, and traveling readers.”*
 
-First, run the development server:
+**BookNook** is a cozy, neo-vintage full-stack web application designed for book lovers, students, and avid readers. It combines a rustic dark-academia design aesthetic with modern full-stack web architecture, featuring a curated digital catalog, seamless book borrowing/returning flows, interactive community marginalia, and a mysterious artifact archive.
 
+---
+
+## ✨ Key Features
+
+* **📖 Interactive Banner Carousel**: Powered by Swiper.js with custom animations, endless looping, and fade effects showcasing featured library highlights and quick navigation.
+* **🔍 Complete Book Catalog & Search**: Explore new arrivals and browse all cataloged books with real-time category filtering and availability status indicators.
+* **📬 Duplicate-Borrow Protection**: Robust management system tracking book copies and active user borrow ledgers.
+* **✍️ The Traveling Marginalia**: Interactive reader scrawls, notes, and emotional confessions left behind in the margins of classic volumes.
+* **🗝️ Cabinet of Curiosities**: An interactive lore and artifact registry showcasing mysterious items recovered from the archive basement.
+* **🎨 Folk & Dark-Academia UI**: Crafted with custom Tailwind CSS borders, soft parchment tones (`#FBF9F4`, `#3A506B`, `#2D312E`), handwritten typography, and Framer Motion micro-interactions.
+
+---
+
+## 🛠️ Tech Stack
+
+### **Frontend**
+* **Framework:** Next.js 16 (App Router, Client & Server Components)
+* **Styling:** Tailwind CSS
+* **Animations:** Framer Motion
+* **Carousel / UI Sliders:** Swiper.js
+* **Icons:** Lucide React
+
+### **Backend & Database** *(External API)*
+* **Runtime:** Node.js, Express.js
+* **Database:** MongoDB / MySQL (via Prisma ORM / RESTful API architecture)
+
+---
+
+## 🚀 Getting Started Locally
+
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing.
+
+### Prerequisites
+* Node.js (v18+ recommended)
+* npm or yarn package manager
+
+### 1. Clone the Repository
 ```bash
+git clone [https://github.com/your-username/booknook.git](https://github.com/your-username/booknook.git)
+cd booknook
+2. Install Dependencies
+Bash
+npm install
+# or if using swiper / framer-motion dependencies
+npm install swiper framer-motion lucide-react
+3. Environment Variables
+Create a .env.local file in the root directory of your project and configure your backend API endpoint:
+
+Code snippet
+NEXT_PUBLIC_API_URL=http://localhost:5000
+4. Run the Development Server
+Bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Open http://localhost:3000 in your browser to view the application.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+📂 Project Structure
+Plaintext
+booknook/
+├── app/                  # Next.js App Router directory
+│   ├── books/            # Dynamic book detail and review routes
+│   ├── all-books/        # Full catalog repository page
+│   ├── components/       # Reusable UI components (Hero, Navigation, etc.)
+│   ├── layout.tsx        # Root layout with font and metadata configuration
+│   └── page.tsx          # Home page featuring Swiper carousel & New Arrivals
+├── public/               # Static assets, background patterns, and images
+├── tailwind.config.js    # Tailwind styling configurations
+└── package.json          # Project dependencies & scripts
+✒️ Author & Contributors
+Developed with care by Naira Mehjabin (Pixel Studio)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Frontend Designer & Full-Stack Web Developer
