@@ -5,12 +5,66 @@ import Hero from "./components/Hero";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Inbox, Loader2 } from "lucide-react";
+import { Inbox, Loader2, Sparkles, Feather, Bookmark, Compass, Eye, Heart, Flame, Key, BookOpen } from "lucide-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+const MARGIN_NOTES = [
+  {
+    id: 1,
+    book: "Kabuliwala",
+    reader: "Anisa S.",
+    note: "“I cried on page 42. Some friendships transcend oceans and years without a single word.”",
+    inkColor: "text-[#3A506B]",
+    rotate: "-rotate-1",
+  },
+  {
+    id: 2,
+    book: "Behind Closed Doors",
+    reader: "Naira M.",
+    note: "“The psychological tension in chapter six is absolute perfection. Do not trust the glossy smile.”",
+    inkColor: "text-[#8B3A3A]",
+    rotate: "rotate-2",
+  },
+  {
+    id: 3,
+    book: "Classic Archive Vol. III",
+    reader: "Anonymous Wanderer",
+    note: "“Found a pressed marigold petal tucked between pages 118 and 119. Left it for whoever reads next.”",
+    inkColor: "text-[#2D312E]",
+    rotate: "-rotate-2",
+  },
+];
+
+const CURIOSITY_ITEMS = [
+  {
+    id: "inkhorn",
+    name: "The Smudged Inkhorn",
+    origin: "Discovered in the Rajshahi scriptorium",
+    lore: "Legend says whoever writes a book review while this inkhorn rests nearby will have their words echoed by future travelers.",
+    icon: Feather,
+    tag: "Artifact #04",
+  },
+  {
+    id: "fern",
+    name: "The Pressed Autumn Fern",
+    origin: "Found inside an 1894 poetry anthology",
+    lore: "Retains a faint scent of rain and old paper, serving as a silent bookmark for anyone brave enough to read past midnight.",
+    icon: Bookmark,
+    tag: "Artifact #09",
+  },
+  {
+    id: "candle",
+    name: "The Midnight Candle Stump",
+    origin: "Recovered from the lower reading stacks",
+    lore: "Melted down to a stub by readers who refused to put down their psychological thrillers until the final plot twist.",
+    icon: Flame,
+    tag: "Artifact #12",
+  },
+];
 
 function NewArrivalsGrid() {
   const [books, setBooks] = useState<any[]>([]);
@@ -124,6 +178,8 @@ export default function Home() {
     document.title = "BookNook | A Small Online Library";
   }, []);
 
+  const [selectedCuriosity, setSelectedCuriosity] = useState(CURIOSITY_ITEMS[0]);
+
   return (
     <main className="min-h-screen bg-[#FBF9F4] relative overflow-x-hidden">
       {/* Background Pattern Decor */}
@@ -171,81 +227,137 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Extra Section 1: How Borrowing Works */}
-        <section className="py-20 px-6 sm:px-12 lg:px-20 border-t border-[#2D312E]/10 bg-[#EAE5D9]/30 backdrop-blur-[2px]">
+        {/* Creative Section 1: The Traveling Marginalia (Interactive Reader Scrawls) */}
+        <section className="py-24 px-6 sm:px-12 lg:px-20 border-t border-[#2D312E]/10 bg-[#EAE5D9]/30 backdrop-blur-[2px] relative overflow-hidden">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h3 className="text-3xl sm:text-4xl font-['var(--font-handwritten)'] font-bold text-[#1C242B]">
-                How Borrowing <span className="text-[#3A506B]">Works</span>
+            <div className="text-center mb-16 space-y-3">
+              <span className="bg-[#3A506B] text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-[#2D312E]/20 shadow-sm">
+                Secret Archive • Scrawled in the Margins
+              </span>
+              <h3 className="text-4xl sm:text-5xl font-['var(--font-handwritten)'] font-bold text-[#1C242B]">
+                The Traveling <span className="text-[#3A506B]">Marginalia</span>
               </h3>
-              <p className="font-serif italic text-sm text-[#3A4045] mt-2">
-                Three simple steps to enjoy and share literary histories.
+              <p className="font-serif italic text-sm sm:text-base text-[#3A4045] max-w-lg mx-auto">
+                “Confessions, tears, and late-night thoughts left behind by readers between the lines of our catalog.”
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-[#FBF9F4] p-8 rounded-3xl border border-[#2D312E]/20 shadow-md text-center space-y-3">
-                <div className="w-12 h-12 bg-[#3A506B] text-white rounded-full flex items-center justify-center mx-auto font-bold font-serif text-lg">1</div>
-                <h4 className="font-serif font-bold text-xl text-[#1C242B]">Discover & Select</h4>
-                <p className="font-sans text-xs text-[#6B7280] leading-relaxed">Browse through our archive or add your own books to the community repository.</p>
-              </div>
-              <div className="bg-[#FBF9F4] p-8 rounded-3xl border border-[#2D312E]/20 shadow-md text-center space-y-3">
-                <div className="w-12 h-12 bg-[#3A506B] text-white rounded-full flex items-center justify-center mx-auto font-bold font-serif text-lg">2</div>
-                <h4 className="font-serif font-bold text-xl text-[#1C242B]">Borrow for Days</h4>
-                <p className="font-sans text-xs text-[#6B7280] leading-relaxed">Secure your copy instantly. Track your active reading periods under My Borrows.</p>
-              </div>
-              <div className="bg-[#FBF9F4] p-8 rounded-3xl border border-[#2D312E]/20 shadow-md text-center space-y-3">
-                <div className="w-12 h-12 bg-[#3A506B] text-white rounded-full flex items-center justify-center mx-auto font-bold font-serif text-lg">3</div>
-                <h4 className="font-serif font-bold text-xl text-[#1C242B]">Return & Relive</h4>
-                <p className="font-sans text-xs text-[#6B7280] leading-relaxed">Return the book back to the shelf so the next traveler can explore its pages.</p>
-              </div>
+              {MARGIN_NOTES.map((item) => (
+                <motion.div
+                  key={item.id}
+                  whileHover={{ scale: 1.03, rotate: 0 }}
+                  className={`bg-[#FBF9F4] border-[3px] border-[#2D312E] rounded-[30px] p-8 shadow-[6px_6px_0px_0px_#2D312E] relative flex flex-col justify-between ${item.rotate} transition-transform duration-300`}
+                >
+                  <div className="absolute top-4 right-4 text-[#6B7280]/30">
+                    <Feather size={22} />
+                  </div>
+
+                  <div className="space-y-4">
+                    <span className="inline-block px-3 py-1 rounded-full bg-[#3A506B]/10 text-[#3A506B] text-[9px] font-sans font-black uppercase tracking-widest border border-[#3A506B]/20">
+                      From: {item.book}
+                    </span>
+                    <p className={`font-serif italic text-lg ${item.inkColor} leading-relaxed pt-2`}>
+                      {item.note}
+                    </p>
+                  </div>
+
+                  <div className="pt-6 mt-6 border-t border-[#2D312E]/10 flex items-center justify-between">
+                    <span className="font-sans text-[10px] uppercase font-bold tracking-widest text-[#6B7280]">
+                      Scrawled by {item.reader}
+                    </span>
+                    <span className="text-xs">✒️</span>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* Extra Section 2: Reader Testimonials */}
-        <section className="py-20 px-6 sm:px-12 lg:px-20 border-t border-[#2D312E]/10">
+        {/* Creative Section 2: The Cabinet of Curiosities & Relics */}
+        <section className="py-24 px-6 sm:px-12 lg:px-20 border-t border-[#2D312E]/10">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h3 className="text-3xl sm:text-4xl font-['var(--font-handwritten)'] font-bold text-[#1C242B]">
-                Reader <span className="text-[#3A506B]">Reviews</span>
+            <div className="text-center mb-16 space-y-3">
+              <span className="bg-[#3A506B] text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-[#2D312E]/20 shadow-sm">
+                Relics • Archive Basement
+              </span>
+              <h3 className="text-4xl sm:text-5xl font-['var(--font-handwritten)'] font-bold text-[#1C242B]">
+                Cabinet of <span className="text-[#3A506B]">Curiosities</span>
               </h3>
-              <p className="font-serif italic text-sm text-[#3A4045] mt-2">
-                Words from fellow travelers of the written word.
+              <p className="font-serif italic text-sm sm:text-base text-[#3A4045] max-w-lg mx-auto">
+                “Inspect the mysterious artifacts recovered from the foundational shelves of BookNook.”
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-[#FBF9F4] p-8 rounded-3xl border border-[#2D312E]/15 shadow-md flex flex-col justify-between">
-                <p className="font-serif italic text-sm text-[#2D312E] leading-relaxed mb-6">
-                  “BookNook’s vintage gazette aesthetic and seamless borrowing system make discovering classic novels an absolute joy.”
-                </p>
-                <div>
-                  <h5 className="font-bold text-xs uppercase tracking-wider text-[#1C242B]">Naira M.</h5>
-                  <p className="text-[10px] text-[#6B7280] uppercase tracking-widest font-serif">Verified Member</p>
-                </div>
+            <div className="bg-[#FBF9F4] border-[3px] border-[#2D312E] rounded-[35px] p-8 sm:p-12 shadow-[10px_10px_0px_0px_#2D312E] grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+              
+              {/* Left Item Selector */}
+              <div className="md:col-span-5 space-y-3">
+                {CURIOSITY_ITEMS.map((item) => {
+                  const IconC = item.icon;
+                  const active = selectedCuriosity.id === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setSelectedCuriosity(item)}
+                      className={`w-full text-left p-4 rounded-2xl border-2 transition-all flex items-center justify-between cursor-pointer ${
+                        active
+                          ? "bg-[#2D312E] text-[#F3EFE6] border-[#2D312E] shadow-md translate-x-1"
+                          : "bg-[#EFECE6]/60 text-[#1C242B] border-[#2D312E]/20 hover:bg-[#EAE5D9]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${active ? 'bg-[#3A506B] border-white/20 text-white' : 'bg-[#FBF9F4] border-[#2D312E]/20 text-[#3A506B]'}`}>
+                          <IconC size={18} />
+                        </div>
+                        <div>
+                          <h4 className="font-serif font-bold text-sm tracking-tight">{item.name}</h4>
+                          <p className={`text-[9px] uppercase tracking-wider ${active ? 'text-[#F3EFE6]/70' : 'text-[#6B7280]'}`}>{item.tag}</p>
+                        </div>
+                      </div>
+                      <Eye size={16} className={active ? 'text-[#F3EFE6]' : 'text-[#6B7280]'} />
+                    </button>
+                  );
+                })}
               </div>
-              <div className="bg-[#FBF9F4] p-8 rounded-3xl border border-[#2D312E]/15 shadow-md flex flex-col justify-between">
-                <p className="font-serif italic text-sm text-[#2D312E] leading-relaxed mb-6">
-                  “Adding my personal library books to the archive was remarkably easy. Love the duplicate-borrow protection.”
-                </p>
-                <div>
-                  <h5 className="font-bold text-xs uppercase tracking-wider text-[#1C242B]">Tanvir Ahmed</h5>
-                  <p className="text-[10px] text-[#6B7280] uppercase tracking-widest font-serif">Contributor</p>
-                </div>
+
+              {/* Right Relic Inspection Box */}
+              <div className="md:col-span-7">
+                <motion.div
+                  key={selectedCuriosity.id}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4 }}
+                  className="bg-[#EFECE6]/60 border-2 border-[#2D312E]/20 rounded-[25px] p-8 space-y-6 shadow-inner relative overflow-hidden"
+                >
+                  <div className="absolute top-4 right-4 bg-[#3A506B] text-white px-3 py-1 rounded-full text-[9px] uppercase tracking-widest font-black">
+                    {selectedCuriosity.tag}
+                  </div>
+
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#6B7280] font-bold">
+                      {selectedCuriosity.origin}
+                    </span>
+                    <h3 className="text-3xl font-serif font-bold text-[#1C242B]">
+                      {selectedCuriosity.name}
+                    </h3>
+                  </div>
+
+                  <p className="font-serif italic text-base text-[#3A4045] leading-relaxed">
+                    “{selectedCuriosity.lore}”
+                  </p>
+
+                  <div className="pt-4 border-t border-[#2D312E]/15 flex items-center justify-between text-xs font-sans font-semibold text-[#6B7280]">
+                    <span>Status: Preserved & Cataloged</span>
+                    <span className="text-[#3A506B] font-bold">BookNook Relic Registry</span>
+                  </div>
+                </motion.div>
               </div>
-              <div className="bg-[#FBF9F4] p-8 rounded-3xl border border-[#2D312E]/15 shadow-md flex flex-col justify-between">
-                <p className="font-serif italic text-sm text-[#2D312E] leading-relaxed mb-6">
-                  “The capsule navbar and responsive design feel incredibly polished. A brilliant small library application!”
-                </p>
-                <div>
-                  <h5 className="font-bold text-xs uppercase tracking-wider text-[#1C242B]">Anisa S.</h5>
-                  <p className="text-[10px] text-[#6B7280] uppercase tracking-widest font-serif">Frequent Reader</p>
-                </div>
-              </div>
+
             </div>
           </div>
         </section>
+
       </div>
     </main>
   );
