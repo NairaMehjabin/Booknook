@@ -2,7 +2,6 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 
-// Ensure your MONGO_URI is defined in your frontend .env.local file
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/booknook";
 const client = new MongoClient(uri);
 const db = client.db();

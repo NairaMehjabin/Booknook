@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,17 @@ import { Eye, EyeOff, Mail, Lock, Sparkles, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 import { signIn } from "@/lib/auth-client";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function LoginPage() {
   const router = useRouter();
+
+  // Instant page title setting
+  useIsomorphicLayoutEffect(() => {
+    document.title = "BookNook | Reader Login";
+  }, []);
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);

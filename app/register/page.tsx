@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,8 +8,17 @@ import { Eye, EyeOff, Mail, Lock, User, Image as ImageIcon, Sparkles, ArrowRight
 import toast from "react-hot-toast";
 import { signUp, signIn } from "@/lib/auth-client";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function RegisterPage() {
   const router = useRouter();
+
+  // Instant page title setting
+  useIsomorphicLayoutEffect(() => {
+    document.title = "BookNook | Reader Registration";
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -27,7 +36,6 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Password validation criteria check
     if (formData.password.length < 6) {
       toast.error("Password must be at least 6 characters long.", {
         style: { background: '#FBF9F4', color: '#1C242B', borderRadius: '1rem', border: '2px solid #2D312E' }
