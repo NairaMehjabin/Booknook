@@ -58,7 +58,7 @@ export default function Navbar() {
 
   const leftLinks = [
     { name: "Home", href: "/" },
-    { name: "All Books", href: "/books" },
+    { name: "All Books", href: "/all-books" },
     ...(isLoggedIn ? [{ name: "Add Book", href: "/add-book" }] : []),
   ];
 
@@ -71,7 +71,7 @@ export default function Navbar() {
 
   const mobileLinks = [
     { name: "Home", href: "/" },
-    { name: "All Books", href: "/books" },
+    { name: "All Books", href: "/all-books" },
     ...(isLoggedIn ? [
       { name: "Add Book", href: "/add-book" },
       { name: "My Books", href: "/my-books" },
@@ -126,7 +126,7 @@ export default function Navbar() {
                       <Link 
                         key={link.name} 
                         href={link.href} 
-                        className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3EFE6]/80 hover:text-[#3A506B] transition-colors font-serif"
+                        className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3EFE6]/80 hover:text-white transition-colors font-serif"
                       >
                         {link.name}
                       </Link>
@@ -138,7 +138,7 @@ export default function Navbar() {
               {/* MOBILE HAMBURGER BUTTON */}
               <button 
                 onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden text-[#F3EFE6] hover:text-[#3A506B] transition-colors focus:outline-none"
+                className="md:hidden text-[#F3EFE6] hover:text-white transition-colors focus:outline-none"
                 aria-label="Open menu"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,7 +158,7 @@ export default function Navbar() {
                   <Link 
                     key={link.name} 
                     href={link.href} 
-                    className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3EFE6]/60 hover:text-[#3A506B] transition-colors font-serif"
+                    className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3EFE6]/60 hover:text-white transition-colors font-serif"
                   >
                     {link.name}
                   </Link>
@@ -175,7 +175,7 @@ export default function Navbar() {
                   <Link 
                     key={link.name} 
                     href={link.href} 
-                    className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3EFE6]/80 hover:text-[#3A506B] transition-colors font-serif"
+                    className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#F3EFE6]/80 hover:text-white transition-colors font-serif"
                   >
                     {link.name}
                   </Link>
@@ -189,7 +189,7 @@ export default function Navbar() {
                 <div className="flex items-center gap-2.5">
                   <Link
                     href="/login"
-                    className="text-[10px] font-bold uppercase tracking-widest font-serif px-3.5 py-1.5 rounded-full border border-white/20 hover:bg-white/10 transition-all text-[#F3EFE6]"
+                    className="text-[10px] font-bold uppercase tracking-widest font-serif px-3.5 py-1.5 rounded-full border border-white/20 hover:bg-white/10 hover:text-white transition-all text-[#F3EFE6]"
                   >
                     Login
                   </Link>
@@ -303,7 +303,7 @@ export default function Navbar() {
                   <Link 
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="group flex items-center justify-between text-2xl font-serif font-bold uppercase text-[#F3EFE6] hover:text-[#3A506B] transition-colors"
+                    className="group flex items-center justify-between text-2xl font-serif font-bold uppercase text-[#F3EFE6] hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -315,7 +315,7 @@ export default function Navbar() {
               <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3 font-serif">Library Archive</p>
               {!isLoggedIn ? (
                 <div className="flex gap-3">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="flex-1 py-3 bg-white/10 text-white rounded-xl font-bold uppercase tracking-widest text-center text-xs">
+                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="flex-1 py-3 bg-white/10 text-white hover:bg-white/20 transition-colors rounded-xl font-bold uppercase tracking-widest text-center text-xs">
                     Login
                   </Link>
                   <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="flex-1 py-3 bg-[#3A506B] text-white rounded-xl font-bold uppercase tracking-widest text-center text-xs">

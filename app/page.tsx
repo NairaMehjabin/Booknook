@@ -124,7 +124,7 @@ export default function Home() {
           {/* See All Books Button */}
           <div className="text-center mt-16">
             <Link
-              href="/books"
+              href="/all-books"
               className="inline-flex items-center gap-3 bg-[#FBF9F4] text-[#2D312E] border-[3px] border-[#2D312E] px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-widest shadow-[6px_6px_0px_0px_#2D312E] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_#2D312E] active:translate-y-0.5 active:shadow-none transition-all"
             >
               See All Books Archive

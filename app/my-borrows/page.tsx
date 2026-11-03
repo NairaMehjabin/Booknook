@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Sparkles, RotateCcw, Calendar, BookOpen, Clock, Loader2 } from "lucide-react";
+import { Sparkles, RotateCcw, Calendar, BookOpen, Clock, Loader2, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -99,6 +99,21 @@ export default function MyBorrowsPage() {
       {/* Main Container with top padding inside so it clears the fixed navbar */}
       <div className="max-w-7xl mx-auto relative z-10 space-y-10 pt-12 sm:pt-16">
         
+        {/* BACK TO LIBRARY BUTTON */}
+        <div className="pt-6">
+          <Link 
+            href="/" 
+            className="group inline-flex items-center gap-3 hover:opacity-80 transition-all uppercase text-[10px] font-black tracking-widest"
+          >
+            <div className="w-10 h-10 border-2 border-[#2D312E] bg-[#FBF9F4] rounded-full flex items-center justify-center group-hover:bg-[#3A506B] group-hover:text-white transition-colors shadow-sm">
+              <ArrowLeft size={18} />
+            </div>
+            <span className="bg-[#FBF9F4]/90 px-3 py-1.5 rounded-full border border-[#2D312E]/20 shadow-sm text-[#1C242B]">
+              Back to Library
+            </span>
+          </Link>
+        </div>
+
         {/* HEADER */}
         <header className="border-b border-[#2D312E]/15 pb-8 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div className="space-y-3">
