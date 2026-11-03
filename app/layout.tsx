@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Plus_Jakarta_Sans, Pacifico } from "next/font/google";
 import Navbar from "./components/Navbar";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -20,7 +21,6 @@ const pacifico = Pacifico({
 });
 
 export const metadata: Metadata = {
-  title: "BookNook | A Small Online Library",
   description: "Add a book, borrow a book, return a book.",
 };
 
@@ -32,6 +32,20 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${jakarta.variable} ${pacifico.variable}`}>
       <body className="bg-[#FBF9F4] text-[#2D312E] font-sans antialiased min-h-screen selection:bg-[#C86228] selection:text-white">
+        {/* Persistent Toaster across all route navigations */}
+        <Toaster 
+          position="top-center" 
+          reverseOrder={false} 
+          toastOptions={{
+            style: {
+              background: "#2D312E",
+              color: "#F3EFE6",
+              borderRadius: "1rem",
+              fontFamily: "var(--font-sans)",
+              fontSize: "12px",
+            }
+          }}
+        />
         <Navbar />
         <main>{children}</main>
       </body>

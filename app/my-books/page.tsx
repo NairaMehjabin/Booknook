@@ -27,6 +27,11 @@ export default function MyBooksPage() {
   const { data: session, isPending } = useSession();
   const user = session?.user;
 
+  // Immediate title update to prevent stalling
+  if (typeof window !== "undefined") {
+    document.title = "BookNook | My Catalogued Volumes";
+  }
+
   const [myBooks, setMyBooks] = useState<any[]>([]);
   const [loadingBooks, setLoadingBooks] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,8 +48,8 @@ export default function MyBooksPage() {
   });
   const [updating, setUpdating] = useState(false);
 
-  // Fetch user's added books
   useEffect(() => {
+    document.title = "BookNook | My Catalogued Volumes";
     const fetchMyBooks = async () => {
       if (!user?.email) return;
       try {
@@ -165,7 +170,7 @@ export default function MyBooksPage() {
 
       <div className="max-w-7xl mx-auto relative z-10 space-y-10">
         
-        {/* BACK TO LIBRARY BUTTON (Styled like Details Page) */}
+        {/* BACK TO LIBRARY BUTTON */}
         <div className="pt-24 sm:pt-28">
           <Link 
             href="/" 

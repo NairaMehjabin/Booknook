@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -26,7 +26,15 @@ const CATEGORY_PILLS = [
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function AllBooksPage() {
+  // Instant title setting on client render before layout paint
+  useIsomorphicLayoutEffect(() => {
+    document.title = "BookNook | All Books Archive";
+  }, []);
+
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -36,7 +44,6 @@ export default function AllBooksPage() {
     const fetchAllBooks = async () => {
       try {
         setLoading(true);
-        // API endpoint to fetch all books
         const res = await fetch(`${API_BASE_URL}/api/books`);
         const json = await res.json();
         if (res.ok) {
@@ -51,7 +58,6 @@ export default function AllBooksPage() {
     fetchAllBooks();
   }, []);
 
-  // Filter books based on category and live search input
   const filteredBooks = books.filter((book) => {
     const matchesCategory = 
       selectedCategory === "All" || book.category?.toLowerCase() === selectedCategory.toLowerCase();
@@ -165,57 +171,67 @@ export default function AllBooksPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
-              {filteredBooks.map((book) => (
-                <motion.div
-                  key={book._id}
-                  layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4 }}
-                  className="bg-[#FBF9F4] border-[3px] border-[#2D312E] rounded-[35px] p-6 shadow-[8px_8px_0px_0px_#2D312E] relative group h-full flex flex-col justify-between transition-transform duration-300 hover:-translate-y-2"
-                >
-                  {/* Category Badge */}
-                  <div className="absolute -top-3 -left-3 bg-[#3A506B] text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-[#2D312E] rotate-[-5deg] z-20 shadow-md">
-                    {book.category}
-                  </div>
+              {filteredBooks.map((book) => {
+                const isOutOfStock = book.totalCopies <= 0;
+                return (
+                  <motion.div
+                    key={book._id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4 }}
+                    className="bg-[#FBF9F4] border-[3px] border-[#2D312E] rounded-[35px] p-6 shadow-[8px_8px_0px_0px_#2D312E] relative group h-full flex flex-col justify-between transition-transform duration-300 hover:-translate-y-2"
+                  >
+                    {/* Category Badge */}
+                    <div className="absolute -top-3 -left-3 bg-[#3A506B] text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border-2 border-[#2D312E] rotate-[-5deg] z-20 shadow-md">
+                      {book.category}
+                    </div>
 
-                  {/* Copies Badge */}
-                  <div className="absolute -top-3 -right-3 bg-[#2D312E] text-[#F3EFE6] px-3.5 py-1 rounded-full font-black text-[9px] uppercase tracking-wider rotate-6 border-2 border-[#FBF9F4] shadow-md z-10">
-                    {book.totalCopies} Copies
-                  </div>
+                    {/* Copies Badge */}
+                    <div className={`absolute -top-3 -right-3 px-3.5 py-1 rounded-full font-black text-[9px] uppercase tracking-wider rotate-6 border-2 shadow-md z-10 ${isOutOfStock ? 'bg-red-600 text-white border-[#2D312E]' : 'bg-[#2D312E] text-[#F3EFE6] border-[#FBF9F4]'}`}>
+                      {isOutOfStock ? '0 Copies' : `${book.totalCopies} Copies`}
+                    </div>
 
-                  {/* Book Image Frame */}
-                  <Link href={`/books/${book._id}`} className="w-full h-80 bg-[#EFECE6] rounded-[25px] border-2 border-[#2D312E]/15 mb-6 overflow-hidden flex items-center justify-center p-4 relative cursor-pointer shadow-inner">
-                    <Image 
-                      src={book.image} 
-                      alt={book.title}
-                      fill
-                      className="object-contain p-2 group-hover:scale-105 transition-transform duration-500 rounded-[20px]"
-                    />
-                  </Link>
-
-                  {/* Book Info */}
-                  <div className="space-y-1 mb-6">
-                    <h3 className="font-serif font-bold text-2xl text-[#1C242B] tracking-tight line-clamp-1 group-hover:text-[#3A506B] transition-colors">
-                      {book.title}
-                    </h3>
-                    <p className="font-sans text-xs uppercase tracking-wider text-[#6B7280] font-semibold">
-                      By {book.author}
-                    </p>
-                  </div>
-
-                  {/* Action Button */}
-                  <div className="mt-auto">
-                    <Link
-                      href={`/books/${book._id}`}
-                      className="w-full bg-[#2D312E] hover:bg-[#3A506B] text-[#F3EFE6] py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md text-xs font-sans uppercase tracking-widest font-bold"
-                    >
-                      View Details
+                    {/* Book Image Frame */}
+                    <Link href={`/books/${book._id}`} className="w-full h-80 bg-[#EFECE6] rounded-[25px] border-2 border-[#2D312E]/15 mb-6 overflow-hidden flex items-center justify-center p-4 relative cursor-pointer shadow-inner">
+                      <Image 
+                        src={book.image} 
+                        alt={book.title}
+                        fill
+                        className={`object-contain p-2 group-hover:scale-105 transition-transform duration-500 rounded-[20px] ${isOutOfStock ? 'opacity-40 grayscale' : ''}`}
+                      />
+                      {isOutOfStock && (
+                        <div className="absolute inset-0 flex items-center justify-center z-20">
+                          <span className="bg-red-700 text-white px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest border-2 border-[#2D312E] -rotate-12 shadow-2xl">
+                            Not Available
+                          </span>
+                        </div>
+                      )}
                     </Link>
-                  </div>
-                </motion.div>
-              ))}
+
+                    {/* Book Info */}
+                    <div className="space-y-1 mb-6">
+                      <h3 className="font-serif font-bold text-2xl text-[#1C242B] tracking-tight line-clamp-1 group-hover:text-[#3A506B] transition-colors">
+                        {book.title}
+                      </h3>
+                      <p className="font-sans text-xs uppercase tracking-wider text-[#6B7280] font-semibold">
+                        By {book.author}
+                      </p>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="mt-auto">
+                      <Link
+                        href={`/books/${book._id}`}
+                        className="w-full bg-[#2D312E] hover:bg-[#3A506B] text-[#F3EFE6] py-3.5 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-95 shadow-md text-xs font-sans uppercase tracking-widest font-bold cursor-pointer"
+                      >
+                        View Details
+                      </Link>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
           </div>
         )}

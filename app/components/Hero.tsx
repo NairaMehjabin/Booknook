@@ -41,7 +41,7 @@ export default function Hero() {
           {/* Button - Centered on mobile, aligned on desktop */}
           <div className="pt-2 flex justify-center sm:justify-end">
             <Link
-              href="/books"
+              href="/all-books"
               className="inline-block bg-[#2C3E50] hover:bg-[#1A252F] text-[#F3EFE6] px-6 py-3 rounded-xl font-sans text-xs uppercase tracking-wider font-semibold shadow-md transition-all transform active:scale-95"
             >
               Explore Archive

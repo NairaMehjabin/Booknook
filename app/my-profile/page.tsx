@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signOut, authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -21,6 +21,9 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import Link from "next/link";
+
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -48,6 +51,11 @@ export default function ProfilePage() {
   const router = useRouter();
   const { data: session, isPending, refetch } = useSession();
   const user = session?.user;
+
+  // Synchronous layout effect updates the title BEFORE DOM paint occurs
+  useIsomorphicLayoutEffect(() => {
+    document.title = "BookNook | Reader Profile";
+  }, []);
 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -91,7 +99,7 @@ export default function ProfilePage() {
 
       toast.success("Profile updated successfully! ✨", { id: toastId });
       setIsEditing(false);
-      refetch(); // Refresh session data
+      refetch();
       router.refresh();
     } catch (err: any) {
       toast.error(err.message || "Something went wrong.", { id: toastId });

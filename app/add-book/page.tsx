@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
@@ -10,10 +10,18 @@ import Link from "next/link";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export default function AddBookPage() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const user = session?.user;
+
+  // Instant title setting on initial client render before layout paint
+  useIsomorphicLayoutEffect(() => {
+    document.title = "BookNook | Add Book Contribution";
+  }, []);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -67,7 +75,7 @@ export default function AddBookPage() {
       }
 
       toast.success("Book successfully added to archive! 📚", { id: toastId });
-      router.push("/books");
+      router.push("/my-books");
       router.refresh();
     } catch (err: any) {
       setSubmitting(false);

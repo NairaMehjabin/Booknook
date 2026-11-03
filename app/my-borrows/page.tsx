@@ -27,10 +27,16 @@ export default function MyBorrowsPage() {
   const { data: session, isPending: sessionLoading } = useSession();
   const user = session?.user;
 
+  // Immediate title update to prevent stalling
+  if (typeof window !== "undefined") {
+    document.title = "BookNook | My Borrowed Volumes";
+  }
+
   const [borrows, setBorrows] = useState<BorrowedItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "BookNook | My Borrowed Volumes";
     const fetchBorrows = async () => {
       if (!user?.email) return;
       try {
