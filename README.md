@@ -1,54 +1,55 @@
-📚 BookNook — A Small Online Library & Literary Archive
-“Sanctuary for lost pages, timeless stories, and traveling readers.”
+# 📚 BookNook — A Small Online Library & Literary Archive
 
-BookNook is a cozy, neo-vintage full-stack web application designed for book lovers, students, and avid readers. It combines a rustic dark-academia design aesthetic with modern full-stack web architecture, featuring a curated digital catalog, seamless book borrowing/returning flows, interactive community marginalia, and a mysterious artifact archive.
+> *“Sanctuary for lost pages, timeless stories, and traveling readers.”*
 
-🌐 Live Deployments
-🎨 Frontend (Vercel): https://booknook-naira2.vercel.app
+**BookNook** is a cozy, neo-vintage full-stack web application designed for book lovers, students, and avid readers. It combines a rustic dark-academia design aesthetic with modern full-stack web architecture, featuring a curated digital catalog, seamless book borrowing/returning flows, interactive community marginalia, and a mysterious artifact archive.
 
-⚙️ Backend API (Render): https://booknook-server-8i3d.onrender.com
+---
 
-✨ Key Features
-📖 Interactive Banner Carousel: Powered by Swiper.js with custom animations, endless looping, and fade effects showcasing featured library highlights and quick navigation.
+## 🌐 Live Deployments
 
-🔍 Complete Book Catalog & Search: Explore new arrivals and browse all cataloged books with real-time category filtering and availability status indicators.
+- **🎨 Frontend (Vercel):** [https://booknook-naira2.vercel.app](https://booknook-naira2.vercel.app)
+- **⚙️ Backend API (Render):** [https://booknook-server-8i3d.onrender.com](https://booknook-server-8i3d.onrender.com)
 
-📬 Duplicate-Borrow Protection: Robust management system tracking book copies and active user borrow ledgers.
+---
 
-✍️ The Traveling Marginalia: Interactive reader scrawls, notes, and emotional confessions left behind in the margins of classic volumes.
+## ✨ Key Features
 
-🗝️ Cabinet of Curiosities: An interactive lore and artifact registry showcasing mysterious items recovered from the archive basement.
+- **📖 Interactive Banner Carousel**: Powered by Swiper.js with custom animations, endless looping, and fade effects showcasing featured library highlights and quick navigation.
+- **🔍 Complete Book Catalog & Search**: Explore new arrivals and browse all cataloged books with real-time category filtering and availability status indicators.
+- **📬 Duplicate-Borrow Protection**: Robust management system tracking book copies and active user borrow ledgers.
+- **✍️ The Traveling Marginalia**: Interactive reader scrawls, notes, and emotional confessions left behind in the margins of classic volumes.
+- **🗝️ Cabinet of Curiosities**: An interactive lore and artifact registry showcasing mysterious items recovered from the archive basement.
+- **🎨 Folk & Dark-Academia UI**: Crafted with custom Tailwind CSS borders, soft parchment tones (`#FBF9F4`, `#3A506B`, `#2D312E`), handwritten typography, and Framer Motion micro-interactions.
 
-🎨 Folk & Dark-Academia UI: Crafted with custom Tailwind CSS borders, soft parchment tones (#FBF9F4, #3A506B, #2D312E), handwritten typography, and Framer Motion micro-interactions.
+---
 
-🛠️ Tech Stack
-Frontend
-Framework: Next.js 16 (App Router, Client & Server Components)
+## 🛠️ Tech Stack
 
-Styling: Tailwind CSS
+### **Frontend**
+- **Framework:** Next.js 16 (App Router, Client & Server Components)
+- **Styling:** Tailwind CSS
+- **Animations:** Framer Motion
+- **Carousel / UI Sliders:** Swiper.js
+- **Icons:** Lucide React
 
-Animations: Framer Motion
+### **Backend & Database** *(External API)*
+- **Runtime:** Node.js, Express.js
+- **Database:** MongoDB / MySQL (via Prisma ORM / RESTful API architecture)
 
-Carousel / UI Sliders: Swiper.js
+---
 
-Icons: Lucide React
+## 🚀 Getting Started Locally
 
-Backend & Database
-Runtime: Node.js, Express.js
-
-Database: MongoDB Atlas
-
-🚀 Getting Started Locally
 Follow these instructions to get a copy of the project up and running on your local machine for development and testing.
 
-Prerequisites
-Node.js (v18+ recommended)
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm or yarn package manager
 
-npm or yarn package manager
-
-1. Clone the Repository
-Bash
-git clone https://github.com/NairaMehjabin/booknook.git
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/NairaMehjabin/Booknook-Server.git](https://github.com/NairaMehjabin/Booknook-Server.git)
 cd booknook
 2. Install Dependencies
 Bash
@@ -80,6 +81,6 @@ booknook/
 ├── tailwind.config.js    # Tailwind styling configurations
 └── package.json          # Project dependencies & scripts
 ✒️ Author & Contributors
-Developed with care by Naira Mehjabin (Pixel Studio)
+Developed with care by Naira Mehjabin
 
 Frontend Designer & Full-Stack Web Developer
