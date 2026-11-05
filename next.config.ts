@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'i.pinimg.com', // Pinterest images support
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com', // 👈 Added Google User Profile Images
+      },
     ],
   },
   experimental: {

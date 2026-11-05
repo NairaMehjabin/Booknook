@@ -5,12 +5,40 @@ import Hero from "./components/Hero";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Inbox, Loader2, Sparkles, Feather, Bookmark, Compass, Eye, Heart, Flame, Key, BookOpen } from "lucide-react";
+import { Inbox, Loader2, Sparkles, Feather, Bookmark, Compass, Eye, Flame, BookOpen, ArrowRight } from "lucide-react";
+
+// Swiper imports
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+const SLIDER_ITEMS = [
+  {
+    id: 1,
+    badge: "Gazette Feature • Vol. IV",
+    title: "Sanctuary for Lost Pages & Timeless Stories",
+    text: "Explore a curated digital archive where readers catalog rare volumes, share personal bookshelves, and discover their next literary obsession.",
+  },
+  {
+    id: 2,
+    badge: "Community Archive • Open Borrow",
+    title: "Borrow, Read, & Return With Complete Ease",
+    text: "Experience seamless book sharing with automated duplicate-borrow protection, active tracking ledgers, and community-driven collections.",
+  },
+  {
+    id: 3,
+    badge: "Rajshahi Scriptorium • Special Collection",
+    title: "Leave Your Thoughts Between the Lines",
+    text: "Immerse yourself in a cozy, vintage reading experience complete with secret margin notes, literary lore, and atmospheric reading sanctuaries.",
+  },
+];
 
 const MARGIN_NOTES = [
   {
@@ -173,9 +201,13 @@ function NewArrivalsGrid() {
 }
 
 export default function Home() {
-  // Instant title setting on initial client render before layout paint
   useIsomorphicLayoutEffect(() => {
     document.title = "BookNook | A Small Online Library";
+  }, []);
+
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
   }, []);
 
   const [selectedCuriosity, setSelectedCuriosity] = useState(CURIOSITY_ITEMS[0]);
@@ -191,6 +223,67 @@ export default function Home() {
       <div className="relative z-10">
         {/* Hero Section */}
         <Hero />
+
+        {/* Banner / Slider Section with Swiper.js */}
+        <section className="py-12 px-6 sm:px-12 lg:px-20 max-w-7xl mx-auto">
+          <div className="text-center mb-8 space-y-2">
+            <span className="bg-[#3A506B] text-white px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border border-[#2D312E]/20 shadow-sm">
+              The Gazette Carousel • Featured Highlights
+            </span>
+          </div>
+
+          <div className="bg-[#FBF9F4] border-[3px] border-[#2D312E] rounded-[40px] shadow-[12px_12px_0px_0px_#2D312E] overflow-hidden relative min-h-[300px]">
+            {!isMounted ? (
+              <div className="py-24 text-center">
+                <Loader2 className="animate-spin text-[#3A506B] mx-auto" size={32} />
+              </div>
+            ) : (
+              <Swiper
+                modules={[Autoplay, Pagination, EffectFade]}
+                effect="fade"
+                fadeEffect={{ crossFade: true }}
+                spaceBetween={30}
+                centeredSlides={true}
+                loop={true}
+                autoplay={{
+                  delay: 4500,
+                  disableOnInteraction: false,
+                }}
+                pagination={{
+                  clickable: true,
+                }}
+                className="w-full py-16 sm:py-20 px-8 sm:px-16"
+              >
+                {SLIDER_ITEMS.map((slide) => (
+                  <SwiperSlide key={slide.id}>
+                    <div className="max-w-3xl mx-auto text-center space-y-6">
+                      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#3A506B] text-white text-[10px] font-black uppercase tracking-widest border border-[#2D312E]/20 shadow-sm">
+                        <Sparkles size={12} /> {slide.badge}
+                      </div>
+
+                      <h2 className="text-3xl sm:text-5xl font-['var(--font-handwritten)'] font-bold text-[#1C242B] leading-tight">
+                        {slide.title}
+                      </h2>
+
+                      <p className="font-serif italic text-base sm:text-lg text-[#3A4045] max-w-2xl mx-auto leading-relaxed">
+                        “{slide.text}”
+                      </p>
+
+                      <div className="pt-2">
+                        <Link
+                          href="/all-books"
+                          className="inline-flex items-center gap-3 bg-[#2D312E] hover:bg-[#3A506B] text-[#F3EFE6] px-9 py-3.5 rounded-full text-xs font-black uppercase tracking-widest shadow-[6px_6px_0px_0px_#3A506B] hover:-translate-y-1 active:translate-y-0.5 transition-all cursor-pointer border-2 border-[#2D312E]"
+                        >
+                          Browse Books <ArrowRight size={16} />
+                        </Link>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+          </div>
+        </section>
 
         {/* New Arrivals Section */}
         <section className="py-24 px-6 sm:px-12 lg:px-20 max-w-7xl mx-auto">

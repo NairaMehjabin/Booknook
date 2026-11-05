@@ -345,7 +345,7 @@ export default function ProfilePage() {
                   <div className="bg-[#3A506B]/10 border-2 border-dashed border-[#3A506B]/30 p-5 rounded-2xl">
                     <h4 className="font-serif font-bold text-sm text-[#1C242B] mb-1">Quick Navigation</h4>
                     <p className="font-sans text-xs text-[#6B7280] leading-relaxed">
-                      You can explore all available volumes in the <Link href="/books" className="text-[#3A506B] font-bold underline">All Books Archive</Link> or add your own contributions via <Link href="/add-book" className="text-[#3A506B] font-bold underline">Add Book</Link>.
+                      You can explore all available volumes in the <Link href="/all-books" className="text-[#3A506B] font-bold underline">All Books Archive</Link> or add your own contributions via <Link href="/add-book" className="text-[#3A506B] font-bold underline">Add Book</Link>.
                     </p>
                   </div>
                 </>

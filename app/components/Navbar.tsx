@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSession, signOut } from "../../lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
 export default function Navbar() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -24,13 +25,17 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Safeguard: Automatically unlock body scroll on route changes or menu close
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
     }
-  }, [mobileMenuOpen]);
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen, pathname]);
 
   const scrollToTop = (e: React.MouseEvent) => {
     e.preventDefault();
