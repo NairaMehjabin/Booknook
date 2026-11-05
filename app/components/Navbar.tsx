@@ -148,10 +148,10 @@ export default function Navbar() {
               {/* MOBILE HAMBURGER BUTTON */}
               <button 
                 onClick={() => setMobileMenuOpen(true)}
-                className="md:hidden text-[#F3EFE6] hover:text-white transition-colors focus:outline-none"
+                className="md:hidden text-[#F3EFE6] hover:text-white transition-colors focus:outline-none p-1"
                 aria-label="Open menu"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -192,11 +192,11 @@ export default function Navbar() {
                 ))}
               </div>
               
-              {/* Auth Buttons / Profile Dropdown */}
+              {/* Auth Buttons / Profile Dropdown (Desktop Only on mobile header to avoid crowding) */}
               {isPending ? (
                 <div className="w-6 h-6 rounded-full border-2 border-white/20 border-t-white animate-spin" />
               ) : !isLoggedIn ? (
-                <div className="flex items-center gap-2.5">
+                <div className="hidden md:flex items-center gap-2.5">
                   <Link
                     href="/login"
                     className="text-[10px] font-bold uppercase tracking-widest font-serif px-3.5 py-1.5 rounded-full border border-white/20 hover:bg-white/10 hover:text-white transition-all text-[#F3EFE6]"
@@ -264,11 +264,11 @@ export default function Navbar() {
               <motion.div 
                 initial={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8, y: -15 }}
-                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[110]"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[110] pointer-events-none"
               >
-                <Link href="/" className="relative group block">
+                <Link href="/" className="relative group block pointer-events-auto">
                   <div className="absolute inset-0 bg-[#2D312E] rounded-full scale-125 shadow-lg group-hover:bg-[#3A506B] transition-colors duration-500" />
-                  <div className="relative w-12 h-12 md:w-14 md:h-14 bg-[#FBF9F4] rounded-full p-1 border-3 border-[#2D312E] flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-110 shadow-inner">
+                  <div className="relative w-11 h-11 md:w-14 md:h-14 bg-[#FBF9F4] rounded-full p-1 border-3 border-[#2D312E] flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-110 shadow-inner">
                     <Image 
                       src="/assets/logo.png" 
                       alt="BookNook Logo Crest" 
@@ -335,15 +335,27 @@ export default function Navbar() {
               <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 mb-3 font-serif">Library Archive</p>
               {!isLoggedIn ? (
                 <div className="flex gap-3">
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="flex-1 py-3 bg-white/10 text-white hover:bg-white/20 transition-colors rounded-xl font-bold uppercase tracking-widest text-center text-xs">
+                  <Link 
+                    href="/login" 
+                    onClick={() => setMobileMenuOpen(false)} 
+                    className="flex-1 py-3 bg-white/10 text-white hover:bg-white/20 active:scale-95 transition-all rounded-xl font-bold uppercase tracking-widest text-center text-xs"
+                  >
                     Login
                   </Link>
-                  <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="flex-1 py-3 bg-[#3A506B] text-white rounded-xl font-bold uppercase tracking-widest text-center text-xs">
+                  <Link 
+                    href="/register" 
+                    onClick={() => setMobileMenuOpen(false)} 
+                    className="flex-1 py-3 bg-[#3A506B] text-white hover:bg-[#2C3E50] active:scale-95 transition-all rounded-xl font-bold uppercase tracking-widest text-center text-xs shadow-md"
+                  >
                     Register
                   </Link>
                 </div>
               ) : (
-                <button onClick={handleLogout} className="w-full py-3 bg-red-600/20 text-red-400 rounded-xl font-bold uppercase tracking-widest text-center text-xs">
+                <button 
+                  type="button" 
+                  onClick={handleLogout} 
+                  className="w-full py-3 bg-red-600/20 text-red-400 hover:bg-red-600/30 active:scale-95 transition-all rounded-xl font-bold uppercase tracking-widest text-center text-xs cursor-pointer"
+                >
                   Logout
                 </button>
               )}
