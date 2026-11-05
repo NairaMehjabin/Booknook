@@ -50,7 +50,6 @@ export default function BookDetailPage({ params }: PageProps) {
 
   useEffect(() => {
     const fetchBookAndBorrowStatus = async () => {
-      // Do not attempt to fetch data until the session has loaded and we have a user email
       if (sessionLoading || !user?.email) return;
 
       try {
@@ -62,7 +61,6 @@ export default function BookDetailPage({ params }: PageProps) {
 
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
         
-        // Fetch book details & user borrows concurrently
         const [bookRes, borrowsRes] = await Promise.all([
           fetch(`${API_URL}/api/books/${id}`),
           fetch(`${API_URL}/api/borrows?email=${user.email}`)
@@ -82,7 +80,6 @@ export default function BookDetailPage({ params }: PageProps) {
           setError("Book record not found in our archive.");
         }
 
-        // Check if user has already borrowed this specific book
         if (borrowsRes.ok) {
           const borrowsData = await borrowsRes.json();
           const userBorrows = borrowsData.data || borrowsData || [];
@@ -107,12 +104,12 @@ export default function BookDetailPage({ params }: PageProps) {
       router.push("/login");
       return;
     }
-    if (alreadyBorrowed) {
-      toast.error("You have already borrowed this book and must return it first!");
-      return;
-    }
     if (book && book.totalCopies <= 0) {
       toast.error("This book is currently out of stock / 0 copies available.");
+      return;
+    }
+    if (alreadyBorrowed) {
+      toast.error("You have already borrowed this book and must return it first!");
       return;
     }
     setIsBorrowModalOpen(true);
@@ -166,7 +163,6 @@ export default function BookDetailPage({ params }: PageProps) {
     }
   };
 
-  // Keep loading state active until both session check and book fetching complete
   if (sessionLoading || loading) {
     return (
       <div className="min-h-screen bg-[#FBF9F4] flex flex-col items-center justify-center font-serif text-[#1C242B] pt-28">
@@ -195,24 +191,23 @@ export default function BookDetailPage({ params }: PageProps) {
     );
   }
 
-  const isAvailable = book.totalCopies > 0 && !alreadyBorrowed;
+  const isOutOfStock = !book.totalCopies || book.totalCopies <= 0;
+  const isAvailable = !isOutOfStock && !alreadyBorrowed;
 
   let buttonText = "Borrow This Book";
-  if (alreadyBorrowed) {
-    buttonText = "Already Borrowed";
-  } else if (!book.totalCopies || book.totalCopies <= 0) {
+  if (isOutOfStock) {
     buttonText = "Not Available (0 Copies)";
+  } else if (alreadyBorrowed) {
+    buttonText = "Already Borrowed";
   }
 
   return (
     <div className="min-h-screen bg-[#FBF9F4] font-serif text-[#1C242B] flex flex-col relative overflow-x-hidden">
-      {/* Background Decor */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-30 z-0 bg-repeat"
         style={{ backgroundImage: "url('/assets/details-bg.png')", backgroundSize: '500px auto' }}
       />
 
-      {/* Navigation */}
       <nav className="relative z-50 pt-28 sm:pt-32 px-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <Link 
           href="/" 
@@ -231,11 +226,9 @@ export default function BookDetailPage({ params }: PageProps) {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="relative z-10 max-w-6xl mx-auto px-6 py-8 md:py-12 flex-grow w-full">
         <div className="grid md:grid-cols-2 gap-12 md:gap-16 items-center">
           
-          {/* Visual Side (Book Frame) */}
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -256,7 +249,6 @@ export default function BookDetailPage({ params }: PageProps) {
               </motion.div>
             </div>
             
-            {/* Copies Badge */}
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-[#3A506B] text-white w-20 h-20 md:w-24 md:h-24 rounded-full flex flex-col items-center justify-center border-[3px] border-[#2D312E] shadow-xl rotate-12 z-20">
                <span className="text-[8px] md:text-[9px] uppercase font-black opacity-80">Available</span>
                <span className="text-lg md:text-2xl font-black">{book.totalCopies}</span>
@@ -264,7 +256,6 @@ export default function BookDetailPage({ params }: PageProps) {
             </div>
           </motion.div>
 
-          {/* Info Side */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -289,7 +280,6 @@ export default function BookDetailPage({ params }: PageProps) {
               {book.description}
             </p>
 
-            {/* Contributor Note Card */}
             <div className="bg-[#2D312E]/5 border-2 border-dashed border-[#2D312E]/20 p-5 md:p-6 rounded-3xl relative overflow-hidden">
                <div className="flex items-center gap-3 mb-2 text-[#3A506B]">
                  <User size={16} />
@@ -302,7 +292,6 @@ export default function BookDetailPage({ params }: PageProps) {
                </div>
             </div>
 
-            {/* Actions */}
             <div className="flex gap-4 pt-2">
               <button 
                 onClick={handleBorrowClick}
@@ -328,7 +317,6 @@ export default function BookDetailPage({ params }: PageProps) {
         </div>
       </main>
 
-      {/* Borrow Confirmation Modal */}
       <AnimatePresence>
         {isBorrowModalOpen && user && (
           <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">

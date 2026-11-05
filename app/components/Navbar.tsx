@@ -112,8 +112,13 @@ export default function Navbar() {
                     exit={{ opacity: 0, x: -20 }}
                   >
                     <Link href="/" onClick={scrollToTop} className="flex items-center gap-2 group">
-                      <div className="w-7 h-7 bg-[#FBF9F4] rounded-full flex items-center justify-center overflow-hidden border border-white/20 transition-transform group-hover:scale-110">
-                        <span className="font-['var(--font-handwritten)'] text-[#3A506B] font-bold text-sm">BN</span>
+                      <div className="w-8 h-8 bg-[#FBF9F4] rounded-full flex items-center justify-center overflow-hidden border border-white/20 transition-transform group-hover:scale-110 relative">
+                        <Image 
+                          src="/assets/logo.png" 
+                          alt="BookNook Logo" 
+                          fill 
+                          className="object-contain p-1"
+                        />
                       </div>
                       <span className="text-lg font-['var(--font-handwritten)'] font-bold text-white tracking-wide">
                         Book<span className="text-[#3A506B]">Nook</span>
@@ -263,8 +268,13 @@ export default function Navbar() {
               >
                 <Link href="/" className="relative group block">
                   <div className="absolute inset-0 bg-[#2D312E] rounded-full scale-125 shadow-lg group-hover:bg-[#3A506B] transition-colors duration-500" />
-                  <div className="relative w-12 h-12 md:w-14 md:h-14 bg-[#FBF9F4] rounded-full p-0.5 border-3 border-[#2D312E] flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-110 shadow-inner">
-                    <span className="font-['var(--font-handwritten)'] text-[#2D312E] text-xl font-bold">BN</span>
+                  <div className="relative w-12 h-12 md:w-14 md:h-14 bg-[#FBF9F4] rounded-full p-1 border-3 border-[#2D312E] flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-110 shadow-inner">
+                    <Image 
+                      src="/assets/logo.png" 
+                      alt="BookNook Logo Crest" 
+                      fill 
+                      className="object-contain p-1.5"
+                    />
                   </div>
                 </Link>
               </motion.div>
@@ -284,9 +294,14 @@ export default function Navbar() {
             className="fixed inset-0 z-[200] bg-[#2D312E] flex flex-col p-6"
           >
             <div className="flex justify-between items-center mb-8">
-              <span className="text-white font-['var(--font-handwritten)'] text-xl font-bold">
-                Book<span className="text-[#3A506B]">Nook</span>
-              </span>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-[#FBF9F4] rounded-full relative overflow-hidden p-0.5">
+                  <Image src="/assets/logo.png" alt="BookNook Logo" fill className="object-contain p-1" />
+                </div>
+                <span className="text-white font-['var(--font-handwritten)'] text-xl font-bold">
+                  Book<span className="text-[#3A506B]">Nook</span>
+                </span>
+              </div>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
                 className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white focus:outline-none"

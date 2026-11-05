@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Sparkles, Compass, Scroll, Heart, Send, UserCheck, ShieldCheck } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSession } from "@/lib/auth-client";
@@ -46,9 +47,19 @@ export default function Footer() {
               <Sparkles size={10} /> Established 2025 • Gazette Vol. IV
             </div>
             
-            <h2 className="text-4xl font-['var(--font-handwritten)'] font-bold tracking-tight text-[#FBF9F4]">
-              BookNook<span className="text-[#C86228]">.</span>
-            </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-[#FBF9F4] rounded-full relative overflow-hidden p-1 border-2 border-white/20 shadow-md">
+                <Image 
+                  src="/assets/logo.png" 
+                  alt="BookNook Logo" 
+                  fill 
+                  className="object-contain p-1"
+                />
+              </div>
+              <h2 className="text-4xl font-['var(--font-handwritten)'] font-bold tracking-tight text-[#FBF9F4]">
+                BookNook<span className="text-[#C86228]">.</span>
+              </h2>
+            </div>
 
             <p className="font-serif italic text-xs sm:text-sm text-[#EFECE6]/70 leading-relaxed max-w-sm">
               “A small online sanctuary where stories are shared, margins are filled with secret thoughts, and every volume finds a temporary home.”
